@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waypoint Hotspot Viewer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <h1>Waypoint Hotspot Viewer</h1>
+
+    <form method="POST" class="form-container">
+        <div class="dropdowns">
+            <label for="system">System:</label>
+            <select name="system" id="system">
+                {% for system in systems %}
+                    <option value="{{ system }}" {% if system == selected_system %}selected{% endif %}>{{ system }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="year">Year:</label>
+            <select name="year" id="year">
+                {% for year in years %}
+                    <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>{{ year }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="month">Month:</label>
+            <select name="month" id="month">
+                {% for m in range(1, 13) %}
+                    <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ m }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+
+        <button type="submit">Show Map</button>
+    </form>
+
+    {% if image_path %}
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='images/' ~ selected_system ~ '_hotspot_' ~ selected_month ~ '_' ~ selected_year ~ '.png') }}"
+                 alt="Hotspot map for {{ selected_system }} - {{ selected_month }}/{{ selected_year }}" />
+        </div>
+        <div>Last updated: {{ last_modified }}</div>
+    {% else %}
+        <p>No map found for {{ selected_system }} for {{ selected_month }}/{{ selected_year }}.</p>
+    {% endif %}
+
+</body>
+</html>
